@@ -85,22 +85,22 @@
         <div class="message">
             <center>
                 <h3>
-                    <b>Monopoly Auction <span onclick="" class="fa fa-globe fa-spin" style="cursor: pointer;" aria-hidden="true"></span></b>
-                    <center><h2 class="mt-4">Auction for Plot </h2><p onload=""> </p></center>
+                    <b>Monopoly Auction <span onclick="location.replace('/')" class="fa fa-globe" style="cursor: pointer;" aria-hidden="true"></span></b>
+                    <center>
+                        <h2 class="mt-4" id="plot_id"></h2><br>
+                        <h1 style="font-size :xx-large" id="plot_rent"></h1>
+                    </center>
                 </h3>
             </center>
-            
+            <div class="progress" role="progressbar" style="height: 5px">
+                <div id="progress" class="progress-bar bg-info" style="width: 100%"></div>
+            </div>
         </div>
+        <script src="./assets/js/auction.js"></script>
         <div class="d-flex justify-content-center">
-            
-            <button onload="aloadx();" id="bbtn" class="m-3 btn btn-outline-dark">&nbsp;Start</i></button><br>
-            <button style="visibility: hidden;" onclick="raise()" id="btn" class="m-3 btn btn-outline-dark"><i class="fa fa-usd" aria-hidden="true">&nbsp;Call</i></button>
+            <button onclick="raise()" id="raise_btn" class="m-3 btn btn-outline-dark"><i class="fa fa-usd" aria-hidden="true">&nbsp;Call</i></button>
         </div>
         
-        <script src="./assets/js/script.js"></script>
-        <script src="./assets/js/buy.js"></script>
-        <script src="./assets/js/rent.js"></script>
-        <script src="./assets/js/auction.js"></script>
-        <script src="./assets/js/random.js"></script>
+        
     </body>
 </html>

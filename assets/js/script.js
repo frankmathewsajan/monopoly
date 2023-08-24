@@ -1,6 +1,5 @@
 let data = {}
 
-
 function ResetGame(p = 0) {
     if (p == 1 || confirm("Reset the Whole Game?")) {
         data = {
@@ -8,24 +7,26 @@ function ResetGame(p = 0) {
             ship: 1500,
             helicopter: 1500,
             plane: 1500,
-            resume: false,
             history: 'Server Started &nbsp;<i class="fa fa-database" aria-hidden="true"></i><br>',
-            plot: [60, 60, 100, 100, 120, 140, 140, 160, 180, 180, 200, 220, 220, 240, 260, 260, 280, 300, 300, 320, 350, 400],
+            but_price: [60, 60, 100, 100, 120, 140, 140, 160, 180, 180, 200, 220, 220, 240, 260, 260, 280, 300, 300, 320, 350, 400],
+            plot_data: [[70, 130, 220, 370, 750], [70, 130, 220, 370, 750], [80, 140, 240, 410, 800], [100, 160, 260, 440, 860], [110, 180, 290, 460, 900], [110, 180, 290, 460, 900], [130, 200, 310, 490, 980], [140, 210, 330, 520, 1e3], [140, 210, 330, 520, 1e3], [160, 230, 350, 550, 1100], [170, 250, 380, 580, 1160], [170, 250, 380, 580, 1160], [190, 270, 400, 610, 1200], [200, 280, 420, 640, 1300], [260, 520, 780, 1040, 1300], [260, 520, 780, 1040, 1300], [220, 300, 440, 670, 1340], [230, 320, 460, 700, 1400], [230, 320, 460, 700, 1400], [250, 340, 480, 730, 1440], [270, 360, 510, 740, 1500], [300, 400, 560, 810, 1600]],
 
-            base: [60, 60, 100, 100, 120, 140, 140, 160, 180, 180, 200, 220, 220, 240, 260, 260, 280, 300, 300, 320, 350, 400],
-            subbase: [10, 10, 20, 20, 40, 40, 40, 60, 70, 70, 90, 90, 90, 110, 120, 120, 140, 140, 140, 160, 180, 200],
-
-            auctionplot: [],
             plots: [],
             carowns: [],
             shipowns: [],
             planeowns: [],
             helicopterowns: [],
-            plotmax: [],
-            colorset: [[1, 2], [3, 4, 5], [6, 7, 8], [9, 10, 11], [12, 13, 14], [15, 16, 17], [18, 19, 20], [21, 22]],
-            mval: [760, 760, 820, 820, 900, 940, 940, 1040, 1070, 1190, 1250, 1250, 1310, 1420, 1420, 1480, 1540, 1540, 1600, 1680, 1800],
-            sublist: [10, 10, 20, 20, 40, 40, 40, 60, 70, 70, 90, 90, 90, 110, 120, 120, 140, 140, 140, 160, 180, 200],
-            addlist: [10, 10, 20, 20, 20, 30, 30, 30, 40, 40, 40, 50, 50, 50, 60, 60, 60, 70, 70, 70, 80, 100],
+            colorset: [
+                [1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                [9, 10, 11],
+                [12, 13, 14],
+                [15, 16, 17],
+                [18, 19, 20],
+                [21, 22]
+            ],
+            lvl: Array(22).fill(-1)
         }
         localStorage.data = JSON.stringify(data)
         localRefresh();
@@ -37,9 +38,6 @@ function ResetGame(p = 0) {
         return false;
     }
 }
-
-
-
 
 localRefresh()
 
@@ -55,14 +53,23 @@ function linearSearch(colorset, number) {
 }
 
 
-
 function localRefresh() {
     if (localStorage.data) {
         data = Object.keys(data).length === 0 ? JSON.parse(localStorage.data) : data, localStorage.data = JSON.stringify(data);
     } else {
         ResetGame(1);
     }
-    const { carowns, shipowns, helicopterowns, planeowns, car, ship, helicopter, plane, history } = data;
+    const {
+        carowns,
+        shipowns,
+        helicopterowns,
+        planeowns,
+        car,
+        ship,
+        helicopter,
+        plane,
+        history
+    } = data;
     document.getElementById("car").innerHTML = car;
     document.getElementById("helicopter").innerHTML = helicopter;
     document.getElementById("ship").innerHTML = ship;
@@ -76,8 +83,6 @@ function localRefresh() {
 
 
 // Basics
-
-
 function addtoHistory(user, action) {
     data.history += user + " : " + action + "<br>";
     localRefresh();
@@ -103,7 +108,9 @@ function sellout(slave, amount, user) {
         worth += Number(getStatus(plot).rent)
     });
     if (worth >= amount) {
-        var sorted_plots = plots.sort(function (a, b) { return a - b })
+        var sorted_plots = plots.sort(function (a, b) {
+            return a - b
+        })
         var loot = data[slave]
         var plot_to_sell = []
         sorted_plots.forEach(plot => {
@@ -116,26 +123,29 @@ function sellout(slave, amount, user) {
             data.plots = data.plots.filter(item => !plot_to_sell.includes(item));
             data[slave + "owns"] = plots.filter(item => !plot_to_sell.includes(item));
             plot_to_sell.forEach(plot => {
-                data.plot[plot - 1] = data.base[plot - 1]
-                data.sublist[plot - 1] = data.subbase[plot - 1]
+                data.lvl[plot - 1] = -1
 
             });
             addtoHistory('SERVER', `Returned & reset plots ${plot_to_sell.join(',')} to bank`)
+            alert('SERVER', `Returned & reset plots ${plot_to_sell.join(',')} to bank`)
             var refund = loot - amount
             Add(refund, slave)
             addtoHistory('SERVER', `REFUND +$${refund} -> ${slave}`)
+            alert('SERVER', `REFUND +$${refund} -> ${slave}`)
         } else {
             data[slave + "owns"] = plots.filter(item => !plot_to_sell.includes(item));
             data[user + "owns"] = data[user + "owns"].concat(plot_to_sell)
             addtoHistory('SERVER', `Transfered plots ${plot_to_sell.join(',')} : ${slave}->${user}`)
+            alert('SERVER', `Returned & reset plots ${plot_to_sell.join(',')} to bank`)
             var refund = loot - amount
             Add(refund, slave)
             addtoHistory('SERVER', `REFUND +$${refund} -> ${slave}`)
+            alert('SERVER', `REFUND +$${refund} -> ${slave}`)
         }
 
     } else {
         Add(amount, user)
-        data[slave] = -100000000
+        data[slave] = -1000
         data[slave + "owns"] = []
         FINISH();
     }
@@ -149,7 +159,10 @@ function FINISH() {
         data[user + "owns"].forEach(plot => {
             worth += getStatus(plot).rent
         });
-        worth_a[i] = { user, worth }
+        worth_a[i] = {
+            user,
+            worth
+        }
     })
     const sorted = worth_a.sort((a, b) => b.worth - a.worth)
     const winner = sorted[0]
@@ -160,10 +173,13 @@ function Sub(amount, user, force = [1, 'bank']) {
     const final_amount = parseInt(Number(data[user]) - Number(amount))
     if (final_amount < 0 && force[0] == 1) {
         sellout(user, amount, force[1])
+        return false
     } else if (final_amount < 0 && force[0] == 0) {
         alert("Insufficent Balance")
+        return false
     } else {
         data[user] = final_amount;
+        return 200
     }
 
     localRefresh()
@@ -187,7 +203,24 @@ function Validate(value, limit = 0) {
     return false;
 }
 
+function SaveGame() {
+    const text = btoa(JSON.stringify(data))
+    const filename = 'monopoly.txt'
+    var blob = new Blob([text], { type: 'text/plain' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
 
+function LoadGame() {
+    const content = prompt('Enter your save data')
+    data = JSON.parse(atob(content))
+    localRefresh()
+}
 
 // In App Script
 function go() {
@@ -197,6 +230,7 @@ function go() {
         addtoHistory(user, "GO +$200");
     }
 }
+
 function jail() {
 
     const user = id_to_name(Validate(Number(prompt("Jail Release\nUse User Number")), 5))
@@ -209,17 +243,17 @@ function jail() {
 
 function teli() {
 
-
-    const user = id_to_name(Validate(Number(prompt("Teleport\nUse User Number")), 5))
+    const id = Validate(Number(prompt("Teleport\nUse User Number")))
+    const user = id_to_name(id, 5)
     const place = Validate(Number(prompt("Teleport\nEnter Plot ID")), 23);
 
     if (user && place) {
         Sub(100, user);
         addtoHistory(user, "Teleport -> " + place + " -100");
         if (getStatus(place).bought) {
-            rent(place, Id);
+            rent(place, id);
         } else {
-            buy(place, Id);
+            buy(place, id);
         }
 
     }
@@ -254,30 +288,33 @@ function getStatus(plotcode) {
             }
         });
     }
+
     // Return the status object
+    const i = plotcode - 1;
     return {
         set: linearSearch(data.colorset, plotcode),
         plotcode,
         owner,
-        rent: data.plot[plotcode - 1],
+        rent: data.plot_data[i][data.lvl[i]],
+        lvl: data.lvl[i],
         bought,
-        mval: data.mval[plotcode - 1],
-        add: data.addlist[plotcode - 1],
-        sub: data.sublist[plotcode - 1]
+        cost: data.but_price[i]
     };
 }
 
 
 
 function auction(plotcode) {
-    if (getStatus(Number(prompt("Plot ID for Auction?", plotcode))).bought !== true) {
-        alert("Redirecting to /auction.html");
-        window.open('/auction?plot=' + plotcode, 'Auction Page');
-    } else {
-        alert("Plot already bought!!!")
+    var plotcode = Validate(Number(prompt("Plot ID for Auction?", plotcode)), 23)
+    if (plotcode && getStatus(plotcode).bought !== true) {
+        alert("Redirecting to Auction Page");
+        location.replace(`/auction?plot=${plotcode}`);
+    } else if (plotcode) {
+        alert(`Plot already owned by ${getStatus(plotcode).owner}\nPay rent & move on dude`)
     }
 
 }
+
 function add() {
 
     a = id_to_name(Validate(Number(prompt("Add\nAdd amount to User?\nEnter User ID")), 5));
@@ -288,6 +325,7 @@ function add() {
         addtoHistory(a, "+ $" + b + "; " + c);
     }
 }
+
 function sub() {
     a = id_to_name(Validate(Number(prompt("Sub\nSub amount to User?\nEnter User ID")), 5));
     b = Validate(Number(prompt("Sub\nEnter Amount")));
@@ -296,15 +334,4 @@ function sub() {
         Sub(b, a);
         addtoHistory(a, "- $" + b + "; " + c);
     }
-}
-
-
-function dataPlot() {
-    var a = data
-    alert(`
-    Total Plots Bought = ${a.plots} \n
-    Car Owns = ${a.carowns} \n
-    Ship Owns = ${a.shipowns} \n
-    Plane Owns = ${a.planeowns} \n
-    Helicopter Owns = ${a.helicopterowns} \n`)
 }
