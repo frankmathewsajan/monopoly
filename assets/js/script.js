@@ -1,5 +1,6 @@
 let data = {}
 
+
 function ResetGame(p = 0) {
     if (p == 1 || confirm("Reset the Whole Game?")) {
         data = {
@@ -25,6 +26,12 @@ function ResetGame(p = 0) {
                 [15, 16, 17],
                 [18, 19, 20],
                 [21, 22]
+            ],
+            sideset: [
+                [1, 2, 3, 4, 5],
+                [6, 7, 8, 9, 10, 11],
+                [12, 13, 14, 15, 16, 17],
+                [18, 19, 20, 21, 22]
             ],
             lvl: Array(22).fill(-1)
         }
@@ -70,6 +77,11 @@ function localRefresh() {
         plane,
         history
     } = data;
+
+    let selectStuff = `<option selected>Draw&nbsp;&nbsp;&nbsp;&nbsp;</option>`
+    Object.keys(events).forEach((option, i) => {
+        selectStuff += `<option value="${i}">${option.replace(/_/g, ' ')}</option>`
+    });
     document.getElementById("car").innerHTML = car;
     document.getElementById("helicopter").innerHTML = helicopter;
     document.getElementById("ship").innerHTML = ship;
@@ -79,6 +91,10 @@ function localRefresh() {
     document.getElementById("ship_plots").innerHTML = shipowns;
     document.getElementById("plane_plots").innerHTML = planeowns;
     document.getElementById("history").innerHTML = history;
+    document.getElementById("select_stuff").innerHTML = selectStuff;
+
+
+
 }
 
 
@@ -86,6 +102,7 @@ function localRefresh() {
 function addtoHistory(user, action) {
     data.history += user + " : " + action + "<br>";
     localRefresh();
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
 }
 
 
@@ -95,8 +112,13 @@ function id_to_name(id) {
 
 
 function Add(amount, user) {
+    if (typeof user !== 'string') {
+        alert('Use id_to_name')
+        return false
+    }
     data[user] = parseInt(Number(data[user]) + Number(amount));
     localRefresh()
+    return 200
 }
 
 
@@ -127,20 +149,20 @@ function sellout(slave, amount, user) {
 
             });
             addtoHistory('SERVER', `Returned & reset plots ${plot_to_sell.join(',')} to bank`)
-            alert('SERVER', `Returned & reset plots ${plot_to_sell.join(',')} to bank`)
+            alert(`Returned & reset plots ${plot_to_sell.join(',')} to bank`)
             var refund = loot - amount
             Add(refund, slave)
             addtoHistory('SERVER', `REFUND +$${refund} -> ${slave}`)
-            alert('SERVER', `REFUND +$${refund} -> ${slave}`)
+            alert(`REFUND +$${refund} -> ${slave}`)
         } else {
             data[slave + "owns"] = plots.filter(item => !plot_to_sell.includes(item));
             data[user + "owns"] = data[user + "owns"].concat(plot_to_sell)
             addtoHistory('SERVER', `Transfered plots ${plot_to_sell.join(',')} : ${slave}->${user}`)
-            alert('SERVER', `Returned & reset plots ${plot_to_sell.join(',')} to bank`)
+            alert(`Returned & reset plots ${plot_to_sell.join(',')} to bank`)
             var refund = loot - amount
             Add(refund, slave)
             addtoHistory('SERVER', `REFUND +$${refund} -> ${slave}`)
-            alert('SERVER', `REFUND +$${refund} -> ${slave}`)
+            alert(`REFUND +$${refund} -> ${slave}`)
         }
 
     } else {
@@ -170,6 +192,10 @@ function FINISH() {
 }
 
 function Sub(amount, user, force = [1, 'bank']) {
+    if (typeof user !== 'string') {
+        alert('Use id_to_name')
+        return false
+    }
     const final_amount = parseInt(Number(data[user]) - Number(amount))
     if (final_amount < 0 && force[0] == 1) {
         sellout(user, amount, force[1])
@@ -288,11 +314,18 @@ function getStatus(plotcode) {
             }
         });
     }
+    const neighbor = (plot) => {
+        if (plot === 1) return [1, 2];
+        if (plot === 22) return [21, 22];
+        return [plot - 1, plot, plot + 1];
+    };
 
     // Return the status object
     const i = plotcode - 1;
     return {
         set: linearSearch(data.colorset, plotcode),
+        side: linearSearch(data.sideset, plotcode),
+        neighbor: neighbor(plotcode),
         plotcode,
         owner,
         rent: data.plot_data[i][data.lvl[i]],
@@ -334,4 +367,16 @@ function sub() {
         Sub(b, a);
         addtoHistory(a, "- $" + b + "; " + c);
     }
+}
+
+var topBtn = document.getElementById("topBtn");
+window.onscroll = function () {
+    if (document.documentElement.scrollTop > 40) {
+        topBtn.style.display = "block";
+    } else {
+        topBtn.style.display = "none";
+    }
+};
+function topFunction() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }

@@ -27,18 +27,35 @@ function rent(plotcode, rent_payer) {
 }
 
 
-function updateCost(plotcode) {
+function updateCost(plotcode,force = 1) {
     if (data.lvl[plotcode - 1] <= 3) {
         data.lvl[plotcode - 1] += 1;
-        alert(`Rent of Plot ${plotcode} is updated to ${getStatus(plotcode).rent} : Level ${data.lvl[plotcode - 1] + 1}`);
+        
+        if (force === 1) {
+            alert(`Rent of Plot ${plotcode} is updated to ${getStatus(plotcode).rent} : Level ${data.lvl[plotcode - 1] + 1}`);
+        }
+        addtoHistory(`Plot ${plotcode}`, `Rent -> ${getStatus(plotcode).rent} : Level ${data.lvl[plotcode - 1] + 1}`);
+
+    }
+    localRefresh();
+}
+function degradeCost(plotcode,force = 1) {
+    if (data.lvl[plotcode - 1] >= 1) {
+        data.lvl[plotcode - 1] -= 1;
+        
+        if (force === 1) {
+            alert(`Rent of Plot ${plotcode} is degraded to ${getStatus(plotcode).rent} : Level ${data.lvl[plotcode - 1] + 1}`);
+        }
         addtoHistory(`Plot ${plotcode}`, `Rent -> ${getStatus(plotcode).rent} : Level ${data.lvl[plotcode - 1] + 1}`);
 
     }
     localRefresh();
 }
 
-function property() {
-    let plotcode = Validate(Number(prompt("Property\nEnter Plot Code")), 23);
+
+
+function property(plotcode,force=0) {
+    var plotcode = force === 0 ? Validate(Number(prompt("Property\nEnter Plot Code"),plotcode), 23):plotcode
     let status = getStatus(plotcode);
     if (plotcode && !status.bought) {
         buy(plotcode)
@@ -71,13 +88,13 @@ function buy(plotcode, buyer, force = 0, cost) {
         if (status.set.length == bought) {
 
             status.set.forEach(plot => {
-                updateCost(plot)
+                updateCost(plot,0)
             });
             addtoHistory(JSON.stringify(status.set), `Entire color set sold out : lvl +1`);
         }
         if (status.set.length == owned) {
             status.set.forEach(plot => {
-                updateCost(plot)
+                updateCost(plot,0)
             });
             addtoHistory(buyer_name, `Got entire color : lvl +2`);
         }
@@ -99,17 +116,14 @@ if (act !== null) {
     }
 }
 
-function dice() {
-    a = id_to_name(Validate((Number(prompt("Card Draw\nEnter UserID"))), 5));
-    var items = [1, 2];
-    var k = items[Math.floor(Math.random() * items.length)];
-    if (a) {
-        if (k == 1) {
-            Add(200, a);
-            addtoHistory(a, "Gained $200 using Random Claim");
-        } else {
-            Sub(100, a);
-            addtoHistory(a, "Lost $100 using Random Claim");
-        }
-    }
+function pick() {
+    document.getElementById('select_stuff').value = Math.ceil(Math.random() * Object.keys(events).length) - 1
+    dice()
 }
+
+function dice() {
+    
+    const eve = Object.keys(events)[Number(document.getElementById("select_stuff").value)]
+    events[eve].fn(eve)
+}
+
