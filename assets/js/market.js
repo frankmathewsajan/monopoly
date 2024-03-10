@@ -90,13 +90,13 @@ function buy(plotcode, buyer, force = 0, cost) {
             status.set.forEach(plot => {
                 updateCost(plot,0)
             });
-            addtoHistory(JSON.stringify(status.set), `Entire color set sold out : lvl +1`);
+            addtoHistory(JSON.stringify(status.set), "Entire color set sold out : lvl +1");
         }
         if (status.set.length == owned) {
             status.set.forEach(plot => {
                 updateCost(plot,0)
             });
-            addtoHistory(buyer_name, `Got entire color : lvl +2`);
+            addtoHistory(buyer_name, "Got entire color : lvl +2");
         }
     }
 

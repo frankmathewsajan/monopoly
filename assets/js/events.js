@@ -18,7 +18,7 @@ const events = {
         }
     },
     TORNADO_ALLEY: {
-        info: `Hey, where did the roof go?`,
+        info: "Hey, where did the roof go?",
         fn: function (_title) {
             const your_plot = Validate(Number(prompt(`${_title}\nChoose one of your property to reset it to level 1\nEnter the PlotID`)), 23)
             if (your_plot) {
@@ -29,7 +29,7 @@ const events = {
     },
 
     GRAND_DESIGNS: {
-        info: `One of you property gets a TV makeover!`,
+        info: "One of you property gets a TV makeover!",
         fn: function (_title) {
             const your_plot = Validate(Number(prompt(`${_title}\nChoose one of your property to upgrade it to level 5\nEnter the PlotID`)), 23)
             if (your_plot) {
@@ -39,29 +39,29 @@ const events = {
         }
     },
     BOOM_TOWN: {
-        info: `Property prices bounce back!`,
+        info: "Property prices bounce back!",
         fn: function (_title) {
             const your_plot = Validate(Number(prompt(`${_title}\nChoose a property to buy it, auction it or raise rent level\nEnter the PlotID`)), 23)
             if (your_plot) {
                 property(your_plot, 1)
-                addtoHistory('EVENT', `Boom'in Business`)
+                addtoHistory('EVENT', "Boom'in Business")
             }
         }
     },
     PICK_YOUR_OWN: {
-        info: `Catch someone stealing you tomatoes`,
+        info: "Catch someone stealing you tomatoes",
         fn: function (_title) {
             alert(`${_title}\nGive the card to someone and put em in jail`)
         }
     },
     TOTAL_GRIDLOCK: {
-        info: `Faulty traffic lights get the street in a jam!`,
+        info: "Faulty traffic lights get the street in a jam!",
         fn: function (_title) {
             alert(`${_title}\nMove everyone to Free Parking\nIf you in jail, STAY!!!`)
         }
     },
     HIGHWAY_TAX: {
-        info: `Your road need repairs`,
+        info: "Your road need repairs",
         fn: function (_title) {
             const id = Validate(Number(prompt(`${_title}\nPay $50 per property you own\nEnter your UserID`)), 5)
             if (id) {
@@ -75,7 +75,7 @@ const events = {
         }
     },
     LOVE_IS_IN_THE_AIR: {
-        info: `Meet someone special right up you street!`,
+        info: "Meet someone special right up you street!",
         fn: function (_title) {
             const id_1 = Validate(Number(prompt(`${_title}\nGift $200 to the special friend\nEnter his/her UserID`)), 5)
             const id_2 = Validate(Number(prompt(`${_title}\nGift yourself $200\nEnter your UserID`)), 5)
@@ -87,7 +87,7 @@ const events = {
         }
     },
     PONG_WHAT_A_STINKER: {
-        info: `The local sewer springs a leak!`,
+        info: "The local sewer springs a leak!",
         fn: function (_title) {
             const your_plot = Validate(Number(prompt(`${_title}\nChoose a property to lower the rent level on the side of the board.\nEnter the PlotID`)), 23)
             if (your_plot) {
@@ -104,7 +104,7 @@ const events = {
         }
     },
     WHAT_A_RIDE: {
-        info: `Your local theme park builds the world's craziest roller-coaster!`,
+        info: "Your local theme park builds the world's craziest roller-coaster!",
         fn: function (_title) {
             const your_plot = Validate(Number(prompt(`${_title}\nChoose a property to raise the rent level on the side of the board.\nEnter the PlotID`)), 23)
             if (your_plot) {
@@ -121,7 +121,7 @@ const events = {
         }
     },
     ON_THE_MAP: {
-        info: `The new railway station gets the go-ahead`,
+        info: "The new railway station gets the go-ahead",
         fn: function (_title) {
             const your_plot = Validate(Number(prompt(`${_title}\nChoose a property to raise the rent level on the color set.\nEnter the PlotID`)), 23)
             if (your_plot) {
@@ -139,7 +139,7 @@ const events = {
     },
 
     TIS_THE_SEASON: {
-        info: `You've caught that nasty cough going around!`,
+        info: "You've caught that nasty cough going around!",
         fn: function (_title) {
             const your_plot = Validate(Number(prompt(`${_title}\nChoose a property to drop the rent level on the color set.\nEnter the PlotID`)), 23)
             if (your_plot) {
@@ -156,7 +156,7 @@ const events = {
         }
     },
     HOUSE_PARTY: {
-        info: `The good times go on till late!`,
+        info: "The good times go on till late!",
         fn: function (_title) {
             const your_plot = Validate(Number(prompt(`${_title}\nChoose a property to drop the rent level of neighbors & raise yours.\nEnter the PlotID`)), 23)
             if (your_plot) {
