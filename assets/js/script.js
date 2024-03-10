@@ -78,7 +78,7 @@ function localRefresh() {
         history
     } = data;
 
-    let selectStuff = `<option selected>Draw&nbsp;&nbsp;&nbsp;&nbsp;</option>`
+    let selectStuff = "<option selected>Draw&nbsp;&nbsp;&nbsp;&nbsp;</option>"
     Object.keys(events).forEach((option, i) => {
         selectStuff += `<option value="${i}">${option.replace(/_/g, ' ')}</option>`
     });
