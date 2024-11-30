@@ -1,7 +1,5 @@
 {
   "projects": {
-    "dev": "fms-monopoly"
-  },
-  "targets": {},
-  "etags": {}
+    "default": "fms-monopoly"
+  }
 }
